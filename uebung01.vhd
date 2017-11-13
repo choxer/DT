@@ -12,9 +12,6 @@ library IEEE;
         library STD;
         use STD.textio;
 
-
-
-
 ENTITY uebung01 IS
 PORT(	I0, I1		: IN bit;
 		S				: IN bit;
@@ -37,13 +34,6 @@ BEGIN
 				(not EN AND I1);
 END MUX;
 
-
-
-
-
-
-
-
 ------------>>>> TESTBENCH <<<<<----------------------------------------------------
 library IEEE;
         use IEEE.std_logic_1164.all;
@@ -58,7 +48,6 @@ library IEEE;
 
         library STD;
         use STD.textio;
-
 
 ENTITY tb_2_1MUX IS 
 
@@ -76,7 +65,7 @@ ARCHITECTURE tb OF tb_2_1MUX IS
 		SIGNAL I0	: bit :='0';
 		SIGNAL I1	: bit :='0';
 		SIGNAL  S	: bit :='0';
-		SIGNAL EN	: bit :='0';		
+		SIGNAL EN	: bit :='0';----alle eingänge sollen bei 0 anfnagen		
 		
 		SIGNAL O1	: bit ;
 		SIGNAL O2	: bit ;
@@ -98,17 +87,24 @@ BEGIN
 							O2 => O2,
 							O3 => O3 );
 											
+				--I0 <= '0' AFTER   0ns, '1' AFTER  70ns,  '0' AFTER 140ns, '1' AFTER 210ns,		 '0' AFTER 280ns, '1' AFTER 350ns, '0' AFTER 420ns, '1' AFTER  490ns,
+						--'0' AFTER 560ns, '1' AFTER  630ns, '0' AFTER 700ns, '1' AFTER 770ns,		 '0' AFTER 840ns, '1' AFTER 910ns, '0' AFTER 980ns, '1' AFTER 1050ns;
 
-				I0 <= '0' AFTER   0ns, '1' AFTER  70ns,  '0' AFTER 140ns, '1' AFTER 210ns,		 '0' AFTER 280ns, '1' AFTER 350ns, '0' AFTER 420ns, '1' AFTER  490ns,
-						'0' AFTER 560ns, '1' AFTER  630ns, '0' AFTER 700ns, '1' AFTER 770ns,		 '0' AFTER 840ns, '1' AFTER 910ns, '0' AFTER 980ns, '1' AFTER 1050ns;
+				--I1 <= '0' AFTER 	0ns, '1' AFTER  140ns, '0' AFTER 280ns, '1' AFTER 420ns, 	 '0' AFTER 560ns, '1' AFTER 700ns, '0' AFTER 840ns, '1' AFTER  980ns;    
 
-				I1 <= '0' AFTER 	0ns, '1' AFTER  140ns, '0' AFTER 280ns, '1' AFTER 420ns, 	 '0' AFTER 560ns, '1' AFTER 700ns, '0' AFTER 840ns, '1' AFTER  980ns;    
+				--S  <= '0' After 	0ns, '1' After 280ns,  '0' After 560ns,	'1' AFTER 840ns;
 
-				S  <= '0' After 	0ns, '1' After 280ns,  '0' After 560ns,	'1' AFTER 840ns;
-
-				EN <= '0' AFTER 	0ns, '1' AFTER 560ns;
+				--EN <= '0' AFTER 	0ns, '1' AFTER 560ns;
 	
-	
+				
+				I0 <= not I0  	AFTER   70ns;
+				
+				I1 <= not I1  	AFTER   140ns;
+				
+				S 	<= not S  	AFTER   280ns;
+				
+				EN <= not EN  	AFTER   560ns;
+								
 				--I0 <= '0' AFTER   70ns, '1' AFTER  140ns,  '0' AFTER 210ns, '1' AFTER 280ns,		 '0' AFTER 350ns, '1' AFTER 420ns, '0' AFTER 490ns, '1' AFTER  560ns,
 						--'0' AFTER 630ns, '1' AFTER  700ns, '0' AFTER 770ns, '1' AFTER 840ns,		 '0' AFTER 910ns, '1' AFTER 980ns, '0' AFTER 1050ns, '1' AFTER 1120ns;
 
@@ -118,10 +114,8 @@ BEGIN
 
 				--EN <= '0' AFTER 	70ns, '1' AFTER 630ns;
 	
-	
-	
-	
-------------------------------------------------bewertete Ausgänge(Wahrheitstabelle)	
+
+------------------------------------------------bewertete Ausgänge(Wahrheitstabelle)-----------------------------------------------------------------------------------------------	
 	
 	--B 	<= '0' AFTER   0ns, '1' AFTER  75ns,  '0' AFTER 145ns, '1' AFTER 215ns,		 '0' AFTER 285ns, '1' AFTER 355ns, '0' AFTER 425ns, '1' AFTER  495ns,
 	--'0' AFTER 565ns, '1' AFTER  635ns, '0' AFTER 705ns, '1' AFTER 775ns,		 '0' AFTER 845ns, '1' AFTER 915ns, '0' AFTER 985ns, '1' AFTER 1055ns;
@@ -185,35 +179,18 @@ BEGIN
 	--B 	<= '0' AFTER   0ns, '1' AFTER   5ns,  '0' AFTER  75ns, '1' AFTER 145ns, '0' AFTER 215ns, '1' AFTER 285ns, '0' AFTER 355ns, '1' AFTER 425ns, '0' AFTER  495ns,
 			--'1' AFTER 565ns, '0' AFTER  635ns, '1' AFTER 705ns, '0' AFTER 775ns,	'1' AFTER 845ns, '0' AFTER 915ns, '1' AFTER 985ns, '0' AFTER 1055ns;
 	
-
-
 		process
 			
-			variable n : integer:=0;
-			constant mask: bit_vector(0 to 15):="0101001100000000";
+			variable n : integer:=0;		-- counter für stelle der maske 
+			constant mask: bit_vector(0 to 15):="0101001100000000";	-- maske: Wertetabelle der Ausgäng(e) 
 			
 				begin
+				wait on O1'transaction;		-- transaction -> neuzuweisung //// event -> änderung 
 				
-				--if n=0 then 
-				
-				--b1<= mask(n);	
-				--b2<= O2 xor mask(n);	
-				--b3<= O3 xor mask(n);	
-				--n:=n+1;
-				--wait for 75 ns;
-				
-				--else
-				--wait for 75ns;
-				
-				wait on O1'transaction;
-				
-				--wait on B;
-				b1<= mask(n);	
-				b2<= O2 xor mask(n);	
-				b3<= O3 xor mask(n);	
+				b1<= mask(n);					-- maske an stelle 'n'  -> soll mit nächster Stelle der Wertetabelle vergleichen!	
+				b2<= O2 xor mask(n);			-- bewerteter ausgang 02  -- auf antivalenz prüfen!! 
+				b3<= O3 xor mask(n);			-- bewerteter ausgang 03 
 				n:=n+1;
-				
-				--end if;
 				
 		end process;
 END tb;
