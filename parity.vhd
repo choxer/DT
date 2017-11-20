@@ -162,14 +162,21 @@ ARCHITECTURE tb_aparity OF tb_parity IS
 			constant mask : std_logic_vector(0 to 15):="1001011001101001";		-- ergibt sich aus wahrheitstabelle: 1. 8 stellen mit s=0 ( odd ) 2. 8 stellen mit s=1 ( even )
 			
 			begin
-				IF ( ((pout(3) = '1') or (pout(3)='0')) THEN	--n<16
-					BO 	<= pout(3) xor mask(n);
-					maskt <= mask(n);
-					n := n+1;			-- da pout(3) sich geändert hat, muss stelle in der maske iterriene
-				ElsE
-				END IF;	
-					
-		end process;  
+				
+				IF ( n<16) 
+				THEN
+				
+					IF(pout(3)='1') or (pout(3)='0')  
+						THEN	
+						BO 	<= pout(3) xor mask(n);
+						maskt <= mask(n);
+						n := n+1;			-- da pout(3) sich geändert hat, muss stelle in der maske iterriene
+							
+					END IF;	
+				
+				end if;
+			
+			end process;  
 
 END tb_aparity;
 
