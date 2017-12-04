@@ -15,9 +15,10 @@ library IEEE;
 ENTITY uebung01 IS
 PORT(	I0, I1		: IN bit;
 		S				: IN bit;
-		EN				: IN bit;
-		O1, O2, O3	: OUT bit
-);
+		EN				: IN bit;	--low active en
+		O1				: OUT bit;
+		O2				: OUT bit;
+		O3				: OUT bit	);
 END uebung01;
 
 ARCHITECTURE MUX OF uebung01 IS
@@ -25,26 +26,28 @@ ARCHITECTURE MUX OF uebung01 IS
 BEGIN
 	O1 <=		(not EN AND I0 AND NOT S) OR 
 				(not EN AND I1 AND S);
-----	
+	
 	WITH S SELECT 
-   O2 <= 	(not EN AND I0)   WHEN '0',---std_logic datentyp führt zu fehler, da nicht alle zustände beschrieben sind 
+   O2 <= 	(not EN AND not I0)   WHEN '0',---std_logic datentyp führt zu fehler, da nicht alle zustände beschrieben sind 
 				(not EN AND I1)	WHEN '1';
-----		
+				
+		
 	O3 <= 	(not EN AND I0) WHEN S='0' ELSE  
 				(not EN AND I1);
+	
 END MUX;
 
 ------------>>>> TESTBENCH <<<<<----------------------------------------------------
 library IEEE;
-        use IEEE.std_logic_1164.all;
-        use IEEE.std_logic_textio.all;
-        use IEEE.std_logic_arith.all;
-        use IEEE.numeric_bit.all;
-        use IEEE.numeric_std.all;
-        use IEEE.std_logic_signed.all;
-        use IEEE.std_logic_unsigned.all;
-        use IEEE.math_real.all;
-        use IEEE.math_complex.all;
+				use IEEE.std_logic_1164.all;
+				use IEEE.std_logic_textio.all;
+				use IEEE.std_logic_arith.all;
+				use IEEE.numeric_bit.all;
+			   use IEEE.numeric_std.all;
+			   use IEEE.std_logic_signed.all;
+			   use IEEE.std_logic_unsigned.all;
+			   use IEEE.math_real.all;
+			   use IEEE.math_complex.all;
 
         library STD;
         use STD.textio;
@@ -58,8 +61,7 @@ ARCHITECTURE tb OF tb_2_1MUX IS
 		PORT(	I0, I1		: IN bit;
 				S				: IN bit;
 				EN				: IN bit;
-				O1, O2, O3	: OUT bit
-		);
+				O1, O2, O3	: OUT bit	);
 		END COMPONENT;
 		
 		SIGNAL I0	: bit :='0';
@@ -71,10 +73,10 @@ ARCHITECTURE tb OF tb_2_1MUX IS
 		SIGNAL O2	: bit ;
 		SIGNAl O3	: bit ;
 		
-		SIGNAL B		: bit ;	--bewertete Ausgänge
-		SIGNAL B1	: bit ;	
-		SIGNAL B2	: bit ;
-		SIGNAl B3	: bit ;
+		--SIGNAL B		: bit ;	--bewertete Ausgänge
+		SIGNAL B1	: bit ;	--maske
+		SIGNAL B2	: bit ;	--
+		SIGNAl B3	: bit ;	--
 
 BEGIN
 		
