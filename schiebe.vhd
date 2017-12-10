@@ -76,7 +76,7 @@ library IEEE;
 		clk4	<= clk_schiebe;
 		
 		
-		process(clk_schiebe'event and clk_schiebe='1')	--d0,d1,d2,d3,d4,rd,ld,s0,s1
+		process(clk_schiebe)	--d0,d1,d2,d3,d4,rd,ld,s0,s1
 		
 			begin
 				
@@ -141,7 +141,7 @@ architecture a_tb_schiebe of tb_schiebe is
 	end component;
 	
 	signal p0,p1,p2,p3,p4	:  std_logic:='1';
-	signal rd,ld				:  std_logic:='0';
+	signal rd,ld				:  std_logic:='1';
 	signal s0,s1				: 	std_logic:='0';
 	signal clk_schiebe		: 	std_logic:='0';
 	
@@ -170,6 +170,9 @@ architecture a_tb_schiebe of tb_schiebe is
 					  o4				=>		o4				);
 					  
 			clk_schiebe <= not clk_schiebe after 	50ns;
-			s0				<= '1'				 after  100ns;	
+			s0				<= not s0 after  200ns;
+			s1				<= not s1 after  400ns;
+			rd				<= not rd after  800ns;
+			ld 			<= not ld after 1600ns;
 				  
 	end a_tb_schiebe;
